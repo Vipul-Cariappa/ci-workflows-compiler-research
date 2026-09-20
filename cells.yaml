@@ -68,6 +68,16 @@ cells:
   - { recipe: llvm-wasm,  version: '22',            os: ubuntu-24.04,    arch: x86_64 }
   - { recipe: llvm-wasm,  version: '22',            os: ubuntu-24.04-arm, arch: arm64  }
   - { recipe: llvm-wasm,  version: '22',            os: macos-26,        arch: arm64  }
+  # wasm on 23: same three rows as 22 (CppInterOp's Unix emscripten
+  # matrix). The per-major patch glob picks up
+  # patches/emscripten-clang23-*.patch, which carries only the
+  # parseLLVMArgs/-mllvm patch -- the WebAssemblyTargetMachine
+  # initAsmInfo/basicCheckForEHAndSjLj reordering the clang22 set needs
+  # landed upstream in release/23.x, and re-applying it would abort the
+  # build on a failed `git apply`.
+  - { recipe: llvm-wasm,  version: '23',            os: ubuntu-24.04,    arch: x86_64 }
+  - { recipe: llvm-wasm,  version: '23',            os: ubuntu-24.04-arm, arch: arm64  }
+  - { recipe: llvm-wasm,  version: '23',            os: macos-26,        arch: arm64  }
   # llvm-wheel: the wheel-building toolchain (static-only, assertions
   # off; see the recipe). Linux cells build inside the per-arch manylinux
   # container for the glibc 2.28 floor; macOS cells build at deployment
