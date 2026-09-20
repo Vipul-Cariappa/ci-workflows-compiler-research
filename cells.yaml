@@ -125,13 +125,21 @@ cells:
   # flavor-version move off it -- removing it earlier drops their cell
   # after grace_days and sends them to a 30-minute inline build.
   - { recipe: llvm-release, version: '23.1.0-rc2', os: ubuntu-24.04,     arch: x86_64 }
-  # Bare-major 23, tracking release/23.x. Added as llvm-msan 23's
-  # bootstrap clang -- fetch_bootstrap looks up llvm-release at the msan
-  # cell's own version string -- and it doubles as the default-flavor
-  # cell for consumers that want the released 23 line without pinning a
-  # tag. Linux x86_64 only, like the rc row: every other platform is a
-  # full LLVM build, so add rows when a consumer needs one.
+  # Bare-major 23, tracking release/23.x. The ubuntu row doubles as
+  # llvm-msan 23's bootstrap clang -- fetch_bootstrap looks up
+  # llvm-release at the msan cell's own version string -- and the set as
+  # a whole is the default-flavor cell for consumers that want the
+  # released 23 line without pinning a tag.
+  #
+  # Narrower than the 22 set below on purpose: these four are the
+  # platforms a consumer asks for today. The 32-bit windows-2025 x86 and
+  # windows-11-arm rows that 22 carries are not duplicated here -- each
+  # is a full LLVM build, and the win32 row that motivates the x86 cell
+  # is still on 22. Add them when a matrix row actually requests 23.
   - { recipe: llvm-release, version: '23',         os: ubuntu-24.04,     arch: x86_64 }
+  - { recipe: llvm-release, version: '23',         os: macos-26,         arch: arm64  }
+  - { recipe: llvm-release, version: '23',         os: macos-26-intel,   arch: x86_64 }
+  - { recipe: llvm-release, version: '23',         os: windows-2025,     arch: x86_64 }
   # llvm-root: `version` doubles as a flavor selector and substitutes
   # into recipes/llvm-root/recipe.yaml's branch_template. Two flavors
   # track root-project/llvm-project's paired branches:
